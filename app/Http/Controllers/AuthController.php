@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\SendOtpMail;
 use App\Models\Admin;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
@@ -38,21 +41,23 @@ class AuthController extends Controller
         $accessToken = $user->createToken('MyApp',['user'])->accessToken;
 
 
-        //********************************************************
+        // توليد OTP
+        $otp = rand(100000, 999999);
 
-        //Create the wallet for the user
-//        $wallet = new Wallet();
-//        $wallet['user_id'] = $user['id'];
-//
-//        $wallet['balance'] = 0;
-//        $wallet->save();
+        // حفظه في قاعدة البيانات
+        $user->update([
+            'otp_code'       => $otp,
+            'otp_expires_at' => Carbon::now()->addMinutes(10),
+        ]);
 
+        // إرسال الإيميل
+        Mail::to($user->email)->send(new SendOtpMail($otp));
 
-        //**********************************************************************
 
 
 
         return response([
+            'message' => 'User created. OTP sent to your email.',
             'user' => $user,
             'access_token' => $accessToken
         ]);
@@ -76,6 +81,12 @@ class AuthController extends Controller
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
+
+        // منع دخول غير المفعل
+        if (!$user->is_verified) {
+            return response()->json(['message' => 'Please verify your email first'], 403);
+        }
+
 
         $token = $user->createToken('user-token')->accessToken;
 
@@ -168,7 +179,38 @@ class AuthController extends Controller
 
 
 
+    public function verifyOtp(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'otp'   => 'required',
+        ]);
 
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        if ($user->otp_code != $request->otp) {
+            return response()->json(['message' => 'Invalid OTP'], 400);
+        }
+
+        if (Carbon::now()->greaterThan($user->otp_expires_at)) {
+            return response()->json(['message' => 'OTP expired'], 400);
+        }
+
+        $user->update([
+            'is_verified' => true,
+            'otp_code' => null,
+            'otp_expires_at' => null,
+        ]);
+
+        return response()->json(['message' => 'Account verified successfully']);
+    }
+
+
+    //------------------------------------------------------------------------------------
 
 
 
