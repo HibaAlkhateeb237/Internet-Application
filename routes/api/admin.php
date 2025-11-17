@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('register',[AuthController::class,'adminRegister']);
+//Route::post('register',[AuthController::class,'adminRegister'])->middleware('check_admin');;
 
 
 Route::post('Login',[AuthController::class,'adminLogin']);
@@ -26,6 +26,7 @@ Route::post('Login',[AuthController::class,'adminLogin']);
 
 Route::middleware(['auth:admin-api'])->group(function () {
     Route::post('logout', [AuthController::class,'adminLogout']);
+    Route::post('register',[AuthController::class,'adminRegister'])->middleware('check_admin');;
 
 });
 
