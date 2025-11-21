@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Complaint extends Model
 {
     protected $fillable = [
-        'user_id','government_agency_id','reference_number',
+        'user_id','government_agency_id','reference_number','status',
         'title','description','location',
         'locked_by_employee_id','locked_at'
     ];
