@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admins', function (Blueprint $table) {
+        Schema::create('complaint_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('government_agency_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+
+            $table->foreignId('complaint_id')->constrained()->cascadeOnDelete();
+            $table->string('file_path');
+
+
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admins');
+        Schema::dropIfExists('complaint_images');
     }
 };

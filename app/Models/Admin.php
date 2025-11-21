@@ -18,11 +18,29 @@ class Admin extends  Authenticatable
         'name',
         'email',
         'password',
+        'government_agency_id',
     ];
     protected $hidden = [
         'password',
 
     ];
 
-    //
+    protected $casts = [
+        'created_at' => 'datetime:Y-m-d\TH:i:s',
+        'updated_at' => 'datetime:Y-m-d\TH:i:s',
+    ];
+
+
+    public function agency()
+    {
+        return $this->belongsTo(GovernmentAgency::class, 'government_agency_id');
+    }
+
+    public function statusHistory()
+    {
+        return $this->hasMany(ComplaintStatusHistory::class);
+    }
+
+
+
 }

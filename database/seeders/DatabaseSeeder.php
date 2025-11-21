@@ -23,6 +23,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
+        $this->call([
+            GovernmentAgencySeeder::class,
+            EmployeeSeeder::class,
+        ]);
+
+
     }
 
 }
