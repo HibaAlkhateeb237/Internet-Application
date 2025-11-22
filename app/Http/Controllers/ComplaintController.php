@@ -18,9 +18,11 @@ class ComplaintController extends Controller
     public function listAgencies()
     {
         return ApiResponse::success(
+            'Agencies fetched successfully',
             $this->service->listAgencies()
         );
     }
+
 
     public function submitComplaint(SubmitComplaintRequest $request)
     {
@@ -28,16 +30,18 @@ class ComplaintController extends Controller
             $user = $request->user();
             $complaint = $this->service->submitComplaint($user, $request);
 
-            return ApiResponse::created([
-                'message' => 'Complaint submitted successfully',
-                'complaint' => $complaint
-            ]);
+            return ApiResponse::success(
+                'Complaint submitted successfully',
+                $complaint,
+                201
+            );
 
         } catch (\Exception $e) {
             return ApiResponse::error(
                 'Failed to submit complaint',
                 $e->getMessage()
             );
+
         }
     }
 }
