@@ -21,6 +21,16 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You must login first',
+                'data'    => null,
+                'errors'  => [
+                    'auth' => 'Unauthenticated'
+                ]
+            ], 401);
+        });
+
     })
     ->create();
