@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 //Route::post('register',[AuthController::class,'adminRegister'])->middleware('check_admin');;
 
 
-Route::post('Login',[AuthController::class,'adminLogin']);
+Route::post('Login',[AuthController::class,'adminLogin']) ->middleware('login.throttle');;
 
 
 Route::middleware(['auth:admin-api'])->group(function () {

@@ -18,19 +18,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'check_admin' => \App\Http\Middleware\CheckAdmin::class,
             'check_owner' => \App\Http\Middleware\CheckOwner::class,
             'client' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
+            'login.throttle' => \App\Http\Middleware\LoginRateLimiter::class,
+
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {
-            return response()->json([
-                'success' => false,
-                'message' => 'You must login first',
-                'data'    => null,
-                'errors'  => [
-                    'auth' => 'Unauthenticated'
-                ]
-            ], 401);
-        });
-
+        //
     })
+
     ->create();
