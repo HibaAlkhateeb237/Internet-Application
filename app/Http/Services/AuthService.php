@@ -37,20 +37,67 @@ class AuthService
         return compact('user', 'token');
     }
 
+    //-----------------------------------------------------------------------------
+
     public function login(string $email, string $password)
     {
         $errors = [];
+        $maxAttempts = 3;
+        $lockMinutes = 3;
         $user = $this->users->findByEmail($email);
 
-        if (!$user) $errors['email'] = 'Email not found';
-        if ($user && !Hash::check($password, $user->password)) $errors['password'] = 'Incorrect password';
-        if ($user && !$user->is_verified) $errors['email'] = 'Email not verified';
 
-        if (!empty($errors)) return ['errors' => $errors];
+        if (!$user) {
+            return ['errors' => ['email' => 'Email not found']];
+        }
+
+
+        if ($user->locked_until && now()->lessThan($user->locked_until)) {
+            $remaining = now()->diffInMinutes($user->locked_until);
+            $remaining =ceil($remaining);
+            return ['errors' => ['email' => "Account locked for {$remaining} minutes"]];
+        }
+
+
+        if (!Hash::check($password, $user->password)) {
+
+
+            $user->failed_login_attempts += 1;
+
+
+            if ($user->failed_login_attempts > $maxAttempts) {
+                $user->locked_until = now()->addMinutes($lockMinutes);
+                $user->save();
+
+
+                Mail::raw(
+                    " Your account has been locked for $lockMinutes  minutes due to multiple failed login attempts.",
+                    function ($message) use ($user) {
+                        $message->to($user->email)->subject('Account Locked');
+                    }
+                );
+
+                return ['errors' => [" email' => 'Account locked for $lockMinutes minutes "]];
+            }
+
+            $user->save();
+            return ['errors' => ['password' => 'Incorrect password']];
+        }
+
+        $user->failed_login_attempts = 0;
+        $user->locked_until = null;
+        $user->save();
+
+
+        if (!$user->is_verified) {
+            return ['errors' => ['email' => 'Email not verified']];
+        }
 
         $token = $user->createToken('user-token')->accessToken;
         return compact('user', 'token');
     }
+
+    //------------------------------------------------------------------------------
 
     public function verifyOtp(string $email, string $otp)
     {

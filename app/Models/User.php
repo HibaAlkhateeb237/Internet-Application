@@ -26,6 +26,8 @@ class User extends Authenticatable
         'otp_code',
         'otp_expires_at',
         'is_verified',
+        'failed_login_attempts',
+        'locked_until',
 
     ];
 
@@ -38,6 +40,11 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+    protected $casts = [
+        'locked_until' => 'datetime',
+    ];
+
 
     /**
      * Get the attributes that should be cast.

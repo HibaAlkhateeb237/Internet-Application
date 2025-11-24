@@ -23,6 +23,11 @@ return new class extends Migration
             $table->dateTime('otp_expires_at')->nullable();
             $table->boolean('is_verified')->default(false);
 
+
+            $table->integer('failed_login_attempts')->default(0);
+            $table->timestamp('locked_until')->nullable();
+
+
             $table->rememberToken();
             $table->timestamps();
         });
@@ -51,5 +56,14 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['failed_login_attempts','locked_until',]);
+        });
+
+
+
+
     }
 };
