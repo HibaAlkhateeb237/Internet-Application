@@ -31,4 +31,15 @@ class SubmitComplaintRequest extends FormRequest
 
         ];
     }
+
+
+    public function messages(): array
+    {
+        return [
+            'government_agency_id.required' => 'The government agency field is required.',
+            'government_agency_id.exists'   => 'The selected government agency is invalid.',
+        ];
+    }
+
+
 }

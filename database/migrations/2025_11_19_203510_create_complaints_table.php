@@ -22,7 +22,7 @@ return new class extends Migration
             $table->string('location');
             $table->enum('status',['new','in_progress','resolved','rejected'])->default('new');
 
-            // لمنع التعديل المتزامن
+
             $table->foreignId('locked_by_admin_id')->nullable()->constrained('admins')->nullOnDelete();
             $table->timestamp('locked_at')->nullable();
 

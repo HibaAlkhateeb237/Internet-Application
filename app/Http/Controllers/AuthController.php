@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SendOtpRequest;
 use App\Http\Services\AuthService;
 use App\Http\Services\AdminService;
 use App\Http\Responses\ApiResponse;
@@ -24,11 +25,11 @@ class AuthController extends Controller
     }
 
     // ---------------- User ----------------
-    public function userRegister(UserRegisterRequest $request)
+   /* public function userRegister(UserRegisterRequest $request)
     {
         $result = $this->auth->register($request->validated());
         return ApiResponse::success('User created. OTP sent.', $result, 201);
-    }
+    }*/
 
     public function userLogin(UserLoginRequest $request)
     {
@@ -43,12 +44,40 @@ class AuthController extends Controller
         return ApiResponse::success('Logged out successfully');
     }
 
+
+
+
+    public function sendOtp(SendOtpRequest $request)
+    {
+        $result = $this->auth->sendOtp($request->email);
+
+        if (isset($result['errors'])) {
+            return ApiResponse::error('Failed to send OTP', $result['errors'], 422);
+        }
+
+        return ApiResponse::success('OTP sent successfully', $result);
+    }
+
+
+
+    // التحقق من OTP وتفعيل الحساب
     public function verifyOtp(VerifyOtpRequest $request)
     {
-        $result = $this->auth->verifyOtp($request->email, $request->otp);
-        if (isset($result['error'])) return ApiResponse::error($result['error'], null, 400);
-        return ApiResponse::success('Account verified successfully');
+        $result = $this->auth->verifyOtp(
+            $request->email,
+            $request->otp,
+            $request->only(['name', 'password'])
+        );
+
+        if (isset($result['errors'])) {
+            return ApiResponse::error('OTP verification failed', $result['errors'], 422);
+        }
+
+        return ApiResponse::success('User verified successfully', $result);
     }
+
+
+
 
     // ---------------- Admin ----------------
     public function adminRegister(AdminRegisterRequest $request)

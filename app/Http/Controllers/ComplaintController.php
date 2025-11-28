@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ComplaintStatusRequest;
 use App\Http\Requests\SubmitComplaintRequest;
 use App\Http\Services\ComplaintService;
 use App\Http\Responses\ApiResponse;
@@ -44,4 +45,28 @@ class ComplaintController extends Controller
 
         }
     }
+
+    //----------------------------------------------------------------------
+
+
+    public function complaintsByStatus(ComplaintStatusRequest $request)
+    {
+        $user = $request->user();
+
+        $complaints = $this->service->getComplaintsByStatusForUser(
+            $user,
+            $request->status
+        );
+
+        return ApiResponse::success(
+            'Complaints retrieved successfully',
+            $complaints
+        );
+    }
+
+
+
+
+
+
 }

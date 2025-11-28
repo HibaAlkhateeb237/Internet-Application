@@ -58,4 +58,23 @@ class ComplaintService
             throw $e;
         }
     }
+
+    //-----------------------------------------------------------
+
+
+
+    public function getComplaintsByStatusForUser($user, string $status)
+    {
+        return $this->complaintRepo->getByStatusForUser($user->id, $status);
+    }
+
+    //----------------------------------------------------------------------
+
+
+
+
+
+
+
+
 }
