@@ -1,7 +1,9 @@
 <?php
 
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
+use App\Http\Controllers\ComplaintInfoRequestController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -23,5 +25,6 @@ Route::middleware(['auth:user-api'])->group(function () {
 
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies']);
     Route::post('submit/complaints', [ComplaintController::class, 'submitComplaint']);
+    Route::post('/info-request/{infoRequest}/respond', [ComplaintInfoRequestController::class, 'respond']);
 
 });

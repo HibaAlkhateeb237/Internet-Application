@@ -20,6 +20,8 @@ class AdminRegisterRequest extends FormRequest
             'name'     => 'required|string|max:55',
             'email'    => 'required|email|unique:admins,email',
             'password' => 'required|confirmed|min:6',
+            'government_agency_id' => 'required|exists:government_agencies,id',
+
         ];
     }
 

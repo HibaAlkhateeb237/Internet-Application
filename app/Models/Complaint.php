@@ -12,7 +12,7 @@ class Complaint extends Model
     protected $fillable = [
         'user_id','government_agency_id','reference_number','status',
         'title','description','location',
-        'locked_by_employee_id','locked_at'
+        'locked_by_admin_id','locked_at'
     ];
 
     protected $casts = [
@@ -40,5 +40,10 @@ class Complaint extends Model
     {
         return $this->hasMany(ComplaintStatusHistory::class);
     }
+    public function infoRequests()
+    {
+        return $this->hasMany(complaint_info_request::class);
+    }
+
 }
 

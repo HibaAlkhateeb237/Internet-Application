@@ -11,14 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('complaint_status_history', function (Blueprint $table) {
+        Schema::create('complaint_status_histories', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('complaint_id')->constrained()->cascadeOnDelete();
             $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
             $table->enum('status',['new','in_progress','resolved','rejected'])->default('new');
             $table->text('note')->nullable();
-            
+
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('complaint_status_history');
+        Schema::dropIfExists('complaint_status_histories');
     }
 };

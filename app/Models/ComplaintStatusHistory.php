@@ -16,7 +16,7 @@ class ComplaintStatusHistory extends Model
     ];
 
 
-    public $timestamps = false;
+    //public $timestamps = false;
 
     public function complaint()
     {

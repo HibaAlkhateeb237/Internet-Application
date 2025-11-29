@@ -17,9 +17,11 @@ class AdminService
     public function register(array $data)
     {
         $admin = $this->admins->create([
+            'government_agency_id'=> $data['government_agency_id'],
             'name'     => $data['name'],
             'email'    => $data['email'],
             'password' => bcrypt($data['password']),
+
         ]);
 
         $token = $admin->createToken('MyApp', ['admin'])->accessToken;
