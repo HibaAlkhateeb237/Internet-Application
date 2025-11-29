@@ -13,15 +13,20 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('phone')->nullable()->unique();
 
             $table->string('otp_code')->nullable();
             $table->dateTime('otp_expires_at')->nullable();
             $table->boolean('is_verified')->default(false);
+
+
+            $table->integer('failed_login_attempts')->default(0);
+            $table->timestamp('locked_until')->nullable();
+
 
             $table->rememberToken();
             $table->timestamps();
@@ -51,5 +56,14 @@ return new class extends Migration
         Schema::dropIfExists('users');
         Schema::dropIfExists('password_reset_tokens');
         Schema::dropIfExists('sessions');
+
+
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn(['failed_login_attempts','locked_until',]);
+        });
+
+
+
+
     }
 };

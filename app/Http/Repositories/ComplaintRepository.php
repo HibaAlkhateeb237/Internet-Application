@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Repositories;
+use App\Http\Resources\ComplaintResource;
 use App\Models\Complaint;
 use App\Models\ComplaintImage;
 
@@ -37,4 +38,23 @@ class ComplaintRepository
             ]);
         }
     }
+
+
+
+
+    public function getByStatusForUser(int $userId, string $status)
+    {
+
+
+        $complaints =Complaint::with(['agency:id,name', 'user:id,name'])
+            ->where('user_id', $userId)
+            ->where('status', $status)
+            ->get();
+
+        return ComplaintResource::collection($complaints);
+    }
+
+
+
+
 }
