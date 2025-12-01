@@ -21,17 +21,28 @@ class ComplaintInfoRequestController extends Controller
 
     public function store(ComplaintInfoRequestStoreRequest $request, Complaint $complaint)
     {
-        $data = $request->validated();
-        $data['admin_id'] = auth('admin')->id();
+        try {
+            $data = $request->validated();
+            $data['admin_id'] = auth('admin')->id();
 
-        $infoRequest = $this->service->sendRequest($complaint, $data);
+            $infoRequest = $this->service->sendRequest($complaint, $data);
 
-        return ApiResponse::success(
-            'تم إرسال طلب معلومات إضافية للمواطن.',
-            $infoRequest,
-            201
-        );
+            return ApiResponse::success(
+                'تم إرسال طلب معلومات إضافية للمواطن.',
+                $infoRequest,
+                201
+            );
+
+        } catch (\Exception $e) {
+
+            return ApiResponse::error(
+                $e->getMessage(),
+                [],
+                403
+            );
+        }
     }
+
 
 
     public function respond(ComplaintInfoRequestRespondRequest $request, complaint_info_request $infoRequest)
