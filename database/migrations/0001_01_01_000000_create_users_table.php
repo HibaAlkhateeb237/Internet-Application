@@ -23,6 +23,8 @@ return new class extends Migration
             $table->dateTime('otp_expires_at')->nullable();
             $table->boolean('is_verified')->default(false);
 
+            $table->string('device_token')->nullable();
+
 
             $table->integer('failed_login_attempts')->default(0);
             $table->timestamp('locked_until')->nullable();

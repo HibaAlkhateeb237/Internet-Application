@@ -28,6 +28,7 @@ class User extends Authenticatable
         'is_verified',
         'failed_login_attempts',
         'locked_until',
+        'device_token',
 
     ];
 

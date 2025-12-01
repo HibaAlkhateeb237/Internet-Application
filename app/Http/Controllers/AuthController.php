@@ -33,9 +33,9 @@ class AuthController extends Controller
 
     public function userLogin(UserLoginRequest $request)
     {
-        $result = $this->auth->login($request->email, $request->password);
-        if (isset($result['errors'])) return ApiResponse::error('Login failed', $result['errors'], 422);
-        return ApiResponse::success('Login successful', $result);
+        return $this->auth->login($request->email, $request->password);
+       // if (isset($result['errors'])) return ApiResponse::error('Login failed', $result['errors'], 422);
+        //return ApiResponse::success('Login successful', $result);
     }
 
     public function userLogout()

@@ -3,6 +3,7 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\UserRepository;
+use App\Http\Responses\ApiResponse;
 use App\Mail\SendOtpMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -42,20 +43,29 @@ class AuthService
     public function login(string $email, string $password)
     {
         $errors = [];
-        $maxAttempts = 3;
+        $maxAttempts = 5;
         $lockMinutes = 3;
         $user = $this->users->findByEmail($email);
 
 
         if (!$user) {
-            return ['errors' => ['email' => 'Email not found']];
+            return ApiResponse::error(
+                 'Email not found',
+                   null,
+                   404
+            );
         }
 
 
         if ($user->locked_until && now()->lessThan($user->locked_until)) {
             $remaining = now()->diffInMinutes($user->locked_until);
             $remaining =ceil($remaining);
-            return ['errors' => ['email' => "Account locked for {$remaining} minutes"]];
+
+            return ApiResponse::error(
+                 "Account locked for {$remaining} minutes",
+                 null,
+                 429
+            );
         }
 
 
@@ -77,11 +87,20 @@ class AuthService
                     }
                 );
 
-                return ['errors' => [" email' => 'Account locked for $lockMinutes minutes "]];
+                return ApiResponse::error(
+                   "Account locked for $lockMinutes minutes",
+                     null,
+                    429
+                );
             }
 
             $user->save();
-            return ['errors' => ['password' => 'Incorrect password']];
+
+            return ApiResponse::error(
+                 'Incorrect password',
+                 null,
+                 401
+            );
         }
 
         $user->failed_login_attempts = 0;
@@ -90,11 +109,22 @@ class AuthService
 
 
         if (!$user->is_verified) {
-            return ['errors' => ['email' => 'Email not verified']];
+            return ApiResponse::error(
+                 'Email not verified',
+                null,
+                 403
+            );
         }
 
         $token = $user->createToken('user-token')->accessToken;
-        return compact('user', 'token');
+        return ApiResponse::success(
+             'Login successful',
+              [
+            'user'  => $user,
+            'token' => $token
+        ],
+            200
+        );
     }
 
     //------------------------------------------------------------------------------
@@ -102,7 +132,7 @@ class AuthService
 
 
 
-    // إرسال OTP فقط
+
     public function sendOtp(string $email)
     {
         $errors = [];
@@ -114,7 +144,7 @@ class AuthService
             return ['errors' => $errors];
         }
 
-        // إذا لا يوجد مستخدم ننشئ واحد فقط بإيميل
+
         if (!$user) {
             $user = $this->users->create([
                 'email' => $email,
@@ -133,7 +163,7 @@ class AuthService
         return ['email' => $email];
     }
 
-    // التحقق من OTP وتفعيل الحساب
+
     public function verifyOtp(string $email, string $otp, array $data)
     {
         $errors = [];
@@ -157,7 +187,7 @@ class AuthService
             return ['errors' => $errors];
         }
 
-        // تحديث بيانات المستخدم بعد تحقق OTP
+
         $this->users->update($user, [
             'is_verified'    => true,
             'otp_code'       => null,

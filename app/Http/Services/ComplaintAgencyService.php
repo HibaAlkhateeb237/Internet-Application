@@ -62,6 +62,8 @@ class ComplaintAgencyService
         return ['success' => true];
     }
 
+    //-----------------------------------------------------------------------------
+
     public function updateStatus($id, $status, $note)
     {
         $admin = Auth::guard('admin')->user();
@@ -80,8 +82,26 @@ class ComplaintAgencyService
             'note' => $note,
         ]);
 
+
+        $user = $complaint->user;
+        $token = $user->device_token;
+
+        if ($token) {
+            $push = new \App\Http\Controllers\PushNotificationController();
+
+            $title = 'تحديث حالة الشكوى';
+            $body = "تم تغيير حالة الشكوى رقم {$complaint->reference_number} إلى: {$status}";
+
+            $push->sendPushNotification($title, $body, $token);
+        }
+
+
+
+
         return ['success' => true];
     }
+
+    //---------------------------------------------------------------------------------
 
     public function addNote($id, $note)
     {
@@ -98,6 +118,8 @@ class ComplaintAgencyService
             'status' => $complaint->status,
             'note' => $note,
         ]);
+
+
 
         return ['success' => true];
     }
