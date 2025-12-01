@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -13,7 +14,7 @@ class Admin extends  Authenticatable
 {
     use HasFactory, Notifiable, HasApiTokens;
 
-
+   // protected $guard_name = 'admin';
     protected $fillable = [
         'name',
         'email',

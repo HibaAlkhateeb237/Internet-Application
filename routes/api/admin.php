@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\AgencyComplaintController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,7 +34,7 @@ Route::middleware(['auth:admin-api'])->group(function () {
     Route::post('/agency/complaints/{id}/status', [AgencyComplaintController::class, 'updateStatus']);
     Route::post('/agency/complaints/{id}/note', [AgencyComplaintController::class, 'addNote']);
     Route::post('/complaints/{complaint}/request-info', [ComplaintInfoRequestController::class, 'store']);
-
+    Route::get('government-agencies', [ComplaintController::class, 'listAgencies']);
 
 });
 
