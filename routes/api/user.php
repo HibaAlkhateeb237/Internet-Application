@@ -1,13 +1,8 @@
 <?php
-
-
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
-
 use App\Http\Controllers\ComplaintInfoRequestController;
-
 use App\Http\Controllers\PushNotificationController;
-
 use Illuminate\Support\Facades\Route;
 
 
@@ -40,6 +35,12 @@ Route::middleware(['auth:user-api'])->group(function () {
 
     //create_device_token
     Route::post('create_device_token', [PushNotificationController::class, 'create_device_token']);
+
+
+    Route::post('complaints/{complaint}/update', [ComplaintController::class, 'updateByUser']);
+
+
+
 
 
 

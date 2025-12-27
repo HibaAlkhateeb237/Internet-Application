@@ -8,7 +8,12 @@ class ComplaintStatusHistory extends Model
 {
 
 
-    protected $fillable = ['complaint_id','admin_id','status','note'];
+    protected $fillable = [
+        'complaint_id','admin_id','status','note',
+        'action_type',
+         'old_value',
+         'new_value',
+    ];
 
     protected $casts = [
         'created_at' => 'datetime:Y-m-d\TH:i:s',

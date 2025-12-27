@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ComplaintStatusRequest;
+use App\Http\Requests\ComplaintUpdateRequest;
 use App\Http\Requests\SubmitComplaintRequest;
 use App\Http\Services\ComplaintService;
 use App\Http\Responses\ApiResponse;
+use App\Models\Complaint;
 
 class ComplaintController extends Controller
 {
@@ -63,6 +65,64 @@ class ComplaintController extends Controller
             $complaints
         );
     }
+
+
+    //--------------------------------------------------------------------------
+
+
+    public function updateByUser(
+        ComplaintUpdateRequest $request,
+        Complaint $complaint
+    ) {
+        $user = auth()->user();
+
+        if ($complaint->user_id !== $user->id) {
+            return ApiResponse::error('Unauthorized', [], 403);
+        }
+
+        try {
+            $updated = $this->service->updateComplaintByUser(
+                $complaint,
+                $request->validated(),
+                $request->file('images', [])
+            );
+
+            return ApiResponse::success(
+                'Complaint updated successfully',
+                $updated
+            );
+
+        } catch (\Exception $e) {
+            return ApiResponse::error($e->getMessage(), [], 400);
+        }
+    }
+
+
+    //-------------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

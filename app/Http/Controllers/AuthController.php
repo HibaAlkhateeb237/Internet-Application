@@ -60,7 +60,7 @@ class AuthController extends Controller
 
 
 
-    // التحقق من OTP وتفعيل الحساب
+
     public function verifyOtp(VerifyOtpRequest $request)
     {
         $result = $this->auth->verifyOtp(

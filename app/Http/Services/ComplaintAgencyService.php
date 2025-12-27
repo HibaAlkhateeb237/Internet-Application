@@ -73,6 +73,8 @@ class ComplaintAgencyService
             return ['error' => true, 'message' => 'لا يمكنك تعديل شكوى ليست محجوزة لك', 'status' => 423];
         }
 
+        $oldStatus = $complaint->status;
+
         $this->repo->update($complaint, ['status' => $status]);
 
         ComplaintStatusHistory::create([
@@ -80,6 +82,10 @@ class ComplaintAgencyService
             'admin_id' => $admin->id,
             'status' => $status,
             'note' => $note,
+            'action_type' => 'status_update',
+            'old_value' => $oldStatus,
+            'new_value' => $status,
+
         ]);
 
 
@@ -117,6 +123,10 @@ class ComplaintAgencyService
             'admin_id' => $admin->id,
             'status' => $complaint->status,
             'note' => $note,
+            'action_type' => 'note_add',
+            'old_value'    => null,
+            'new_value'    => $note,
+
         ]);
 
 

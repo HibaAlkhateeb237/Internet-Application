@@ -56,5 +56,19 @@ class ComplaintRepository
 
 
 
+    public function updateComplaint(Complaint $complaint, array $data)
+    {
+        $complaint->update($data);
+        return $complaint;
+    }
+
+
+
+
+
+
+
+
+
 
 }

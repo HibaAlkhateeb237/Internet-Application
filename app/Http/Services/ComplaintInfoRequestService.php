@@ -23,16 +23,34 @@ class ComplaintInfoRequestService
     {
 
 
-        // القفل يجب أن يكون لصاحب الطلب الحالي
+
         if ($complaint->locked_by_admin_id !== auth('admin')->id()) {
             throw new \Exception('لا يمكنك إرسال طلب معلومات لأن الشكوى مقفلة من موظف آخر.');
         }
 
-        // إنشاء طلب المعلومات
+
         $infoRequest = $this->repository->createRequest($complaint, $data);
 
-        // تحديث حالة الشكوى
+
         $complaint->update(['status' => 'in_progress']);
+
+
+        $user = $complaint->user;
+        $token = $user->device_token;
+
+        if ($token) {
+            $pushNotificationController = new \App\Http\Controllers\PushNotificationController();
+
+            $title = 'طلب معلومات إضافية';
+            $body  = 'تم طلب معلومات إضافية بخصوص الشكوى رقم '
+                . $complaint->reference_number;
+
+            $pushNotificationController->sendPushNotification(
+                $title,
+                $body,
+                $token
+            );
+        }
 
         return $infoRequest;
     }
