@@ -196,6 +196,10 @@ class AuthService
             'password'       => Hash::make($data['password']),
         ]);
 
+
+        $user->assignRole('user');
+
+
         $token = $user->createToken('user-token')->accessToken;
 
         return compact('user', 'token');

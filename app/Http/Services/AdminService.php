@@ -3,7 +3,9 @@
 namespace App\Http\Services;
 
 use App\Http\Repositories\AdminRepository;
+use App\Http\Responses\ApiResponse;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminService
 {
@@ -24,6 +26,9 @@ class AdminService
 
         ]);
         //$admin->assignRole('agency-employee');
+
+        $admin->assignRole('employee');
+
         $token = $admin->createToken('MyApp', ['admin'])->accessToken;
         return compact('admin', 'token');
     }
@@ -41,4 +46,69 @@ class AdminService
         $token = $admin->createToken('MyApp', ['admin'])->accessToken;
         return compact('admin', 'token');
     }
+
+
+
+
+    //-------------------------------------------------------------------------------------------
+
+
+    public function assignRole($request, $id)
+    {
+        $user = $this->admins->findById($id);
+
+        if (!$user) {
+            return ApiResponse::error("User not found", [], 404);
+        }
+
+        if (!Role::where('name', $request->role)->exists()) {
+            return ApiResponse::error("Role does not exist", [], 404);
+        }
+
+        if ($user->hasRole($request->role)) {
+            return ApiResponse::error("User already has this role", [], 400);
+        }
+
+        $user->assignRole($request->role);
+
+        return ApiResponse::success("Role assigned successfully");
+    }
+
+    //------------------------------
+
+    public function removeRole($request, $id)
+    {
+        $user = $this->admins->findById($id);
+
+        if (!$user) {
+            return ApiResponse::error("User not found", [], 404);
+        }
+
+        if (empty($request->role)) {
+            return ApiResponse::error("Role is required", [], 422);
+        }
+
+        if (!$user->hasRole($request->role)) {
+            return ApiResponse::error("User does not have this role", [], 400);
+        }
+
+        $user->removeRole($request->role);
+
+        return ApiResponse::success("Role removed successfully");
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

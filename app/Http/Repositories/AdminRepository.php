@@ -15,4 +15,14 @@ class AdminRepository
     {
         return Admin::where('email', $email)->first();
     }
+
+
+    public function findById($id)
+    {
+        return Admin::with(['roles', 'permissions'])->find($id);
+    }
+
+
+
+
 }

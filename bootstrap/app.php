@@ -5,6 +5,9 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Spatie\Permission\Middleware\PermissionMiddleware;
+use Spatie\Permission\Middleware\RoleMiddleware;
+use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,6 +25,10 @@ return Application::configure(basePath: dirname(__DIR__))
             'client' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
             'login.throttle' => \App\Http\Middleware\LoginRateLimiter::class,
             'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+
+            'role' => RoleMiddleware::class,
+            'permission' => PermissionMiddleware::class,
+            'role_or_permission' => RoleOrPermissionMiddleware::class,
 
         ]);
     })
