@@ -12,6 +12,8 @@
 
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AgencyComplaintController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
@@ -48,6 +50,12 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
     Route::post('/users/{id}/remove-role', [AdminController::class, 'removeRole'])->middleware('permission:manage roles');
 
 
+    //======================Employees=============================
+
+    Route::get('/Employees', [AdminController::class, 'index'])->middleware('permission:manage Employees');
+    Route::delete('/Employees/{id}', [AdminController::class, 'destroy'])->middleware('permission:manage Employees');
+    Route::put('/Employees/{id}', [AdminController::class, 'update'])->middleware('permission:manage Employees');
+    Route::get('/Employees/{id}', [AdminController::class, 'show'])->middleware('permission:manage Employees');
     // ================= Users =================
 
     Route::get('/users', [UserController::class, 'index'])->middleware('permission:manage users');
@@ -56,6 +64,11 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
     Route::put('/users/{id}', [UserController::class, 'update'])->middleware('permission:manage users');
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('permission:manage users');
 
+//=========================Dashboard================================
+
+    Route::get('/dashboard/stats', [AdminDashboardController::class, 'stats'])->middleware('permission:system dashboard');
+
+    Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv']);
 
 
 
@@ -65,6 +78,7 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
 });
 
 
+Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv']);
 
 
 // ->middleware('permission:info_request.create');

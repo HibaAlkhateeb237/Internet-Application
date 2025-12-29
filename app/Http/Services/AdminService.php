@@ -106,6 +106,89 @@ class AdminService
 
 
 
+    public function listEmployees()
+    {
+        return ApiResponse::success("Users fetched successfully", $this->admins->getAllEmployees());
+    }
+
+
+
+    public function deleteEmployee($id)
+    {
+
+
+        if ($id==1) {
+            return ApiResponse::error("Can not delete super admin account", [], 401);
+        }
+
+        else {
+
+            $admin = $this->admins->findById($id);
+
+            if (!$admin) {
+                return ApiResponse::error("User not found", [], 404);
+            }
+
+            $this->admins->delete($admin);
+
+            return ApiResponse::success("User deleted successfully");
+
+        }
+    }
+
+//updateEmployee
+
+    public function updateEmployee($request, $id)
+    {
+
+
+        if ($id==1) {
+            return ApiResponse::error("Can not update super admin account", [], 401);
+        }
+
+        else {
+
+            $admin = $this->admins->findById($id);
+
+            if (!$admin) {
+                return ApiResponse::error("User not found", [], 404);
+            }
+
+            $this->admins->update($admin, $request->only(['name', 'email']));
+
+            return ApiResponse::success("User updated successfully", $admin);
+
+
+        }
+
+    }
+
+
+
+    public function getEmployee($id)
+    {
+        if ($id==1) {
+            return ApiResponse::error("Can not fetch super admin account", [], 401);
+        }
+
+       $admin= $this->admins->findById($id);
+
+        if (!$admin) {
+            return ApiResponse::error("User not found", [], 404);
+        }
+
+        return ApiResponse::success("User fetched successfully", $admin);
+    }
+
+
+
+
+
+
+
+
+
+
 
 
 

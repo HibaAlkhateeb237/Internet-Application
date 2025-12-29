@@ -2,6 +2,7 @@
 
 namespace App\Http\Repositories;
 
+use App\Models\Admin;
 use App\Models\User;
 
 class UserAdminRepository
@@ -17,6 +18,8 @@ class UserAdminRepository
         return User::with('roles')
             ->paginate(10);
     }
+
+
 
     public function findById($id)
     {

@@ -23,6 +23,8 @@ class UserController extends Controller
         return $this->service->listUsers();
     }
 
+
+
     public function show($id)
     {
         return $this->service->getUser($id);
@@ -44,8 +46,6 @@ class UserController extends Controller
     {
         return $this->service->deleteUser($id);
     }
-
-
 
 
 

@@ -89,6 +89,8 @@ class RolesAndPermissionsSeeder extends Seeder
                 'manage roles',
                 'manage permissions',
                 'manage users',
+                 'system dashboard',
+                'manage Employees',
 
             ]
         );

@@ -20,7 +20,32 @@ class AdminRepository
     public function findById($id)
     {
         return Admin::with(['roles', 'permissions'])->find($id);
+
     }
+
+
+
+    public function getAllEmployees()
+    {
+        return Admin::query()
+            ->where('id', '!=', 1)
+            ->paginate(10);
+    }
+
+
+
+    public function delete(Admin $admin)
+    {
+        return $admin->delete();
+    }
+
+
+    public function update(Admin $admin, array $data)
+    {
+        return $admin->update($data);
+    }
+
+
 
 
 
