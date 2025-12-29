@@ -88,6 +88,7 @@ class RolesAndPermissionsSeeder extends Seeder
                 'list-agencies',
                 'manage roles',
                 'manage permissions',
+                'manage users',
 
             ]
         );

@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -34,6 +35,7 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
     Route::post('register', [AuthController::class, 'adminRegister'])->middleware('permission:admin.register');
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies'])->middleware('permission:list-agencies');
 
+    // ================= Roles & Permissions =================
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:manage roles');
     Route::get('/roles/{id}', [RoleController::class, 'show'])->middleware('permission:manage roles');
@@ -46,7 +48,13 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
     Route::post('/users/{id}/remove-role', [AdminController::class, 'removeRole'])->middleware('permission:manage roles');
 
 
+    // ================= Users =================
 
+    Route::get('/users', [UserController::class, 'index'])->middleware('permission:manage users');
+    Route::get('/users/{id}', [UserController::class, 'show'])->middleware('permission:manage users');
+    Route::post('/users', [UserController::class, 'store'])->middleware('permission:manage users');
+    Route::put('/users/{id}', [UserController::class, 'update'])->middleware('permission:manage users');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->middleware('permission:manage users');
 
 
 
