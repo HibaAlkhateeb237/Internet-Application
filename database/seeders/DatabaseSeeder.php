@@ -26,8 +26,9 @@ class DatabaseSeeder extends Seeder
             GovernmentAgencySeeder::class,
             AdminSeeder::class,
             EmployeeSeeder::class,
-        //    PermissionsSeeder::class,
-        //    RolesSeeder::class
+         //  PermissionsSeeder::class,
+          //  RolesSeeder::class
+            AuditLogSeeder::class
         ]);
 
 

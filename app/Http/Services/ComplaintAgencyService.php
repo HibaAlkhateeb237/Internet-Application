@@ -31,7 +31,7 @@ class ComplaintAgencyService
             $complaint = $this->repo->lockForUpdate($id);
 
             if ($complaint->locked_by_admin_id && $complaint->locked_by_admin_id != $admin->id) {
-                if ($complaint->locked_at && now()->diffInMinutes($complaint->locked_at) < 15) {
+                if ($complaint->locked_at && now()->diffInMinutes($complaint->locked_at) < 1) {
                     return ['error' => true, 'message' => 'الشكوى مقفلة من موظف آخر', 'status' => 423];
                 }
             }
@@ -70,6 +70,9 @@ class ComplaintAgencyService
         if ($complaint->locked_by_admin_id != $admin->id) {
             return ['error' => true, 'message' => 'لا يمكنك تعديل شكوى ليست محجوزة لك', 'status' => 423];
         }
+//        if (!auth('admin')->user()->can('edit_complaints')) {
+//            return response()->json(['error' => 'لا تملك صلاحية تعديل الشكوى'], 403);
+//        }
 
         $this->repo->update($complaint, ['status' => $status]);
 

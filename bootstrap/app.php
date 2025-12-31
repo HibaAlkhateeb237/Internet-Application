@@ -22,6 +22,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'client' => \Laravel\Passport\Http\Middleware\CheckClientCredentials::class,
             'login.throttle' => \App\Http\Middleware\LoginRateLimiter::class,
             'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+            'trace'           => \App\Http\Middleware\TraceMiddleware::class,
 
         ]);
     })

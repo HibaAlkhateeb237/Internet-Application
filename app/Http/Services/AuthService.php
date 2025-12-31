@@ -102,7 +102,6 @@ class AuthService
 
 
 
-    // إرسال OTP فقط
     public function sendOtp(string $email)
     {
         $errors = [];
@@ -114,7 +113,6 @@ class AuthService
             return ['errors' => $errors];
         }
 
-        // إذا لا يوجد مستخدم ننشئ واحد فقط بإيميل
         if (!$user) {
             $user = $this->users->create([
                 'email' => $email,
@@ -133,7 +131,6 @@ class AuthService
         return ['email' => $email];
     }
 
-    // التحقق من OTP وتفعيل الحساب
     public function verifyOtp(string $email, string $otp, array $data)
     {
         $errors = [];
@@ -157,7 +154,6 @@ class AuthService
             return ['errors' => $errors];
         }
 
-        // تحديث بيانات المستخدم بعد تحقق OTP
         $this->users->update($user, [
             'is_verified'    => true,
             'otp_code'       => null,

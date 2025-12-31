@@ -13,7 +13,7 @@ class LoginRateLimiter
     {
         $key = 'login:' . $request->ip() . ':' . $request->email;
 
-        // التحقق من تجاوز عدد المحاولات
+
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
 
@@ -24,7 +24,7 @@ class LoginRateLimiter
             );
         }
 
-        // زيادة المحاولات
+
         RateLimiter::hit($key, 60);
 
         return $next($request);

@@ -12,6 +12,7 @@
 
 
 use App\Http\Controllers\AgencyComplaintController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
@@ -35,7 +36,8 @@ Route::middleware(['auth:admin-api'])->group(function () {
     Route::post('/agency/complaints/{id}/note', [AgencyComplaintController::class, 'addNote']);
     Route::post('/complaints/{complaint}/request-info', [ComplaintInfoRequestController::class, 'store']);
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies']);
-
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])
+        ->middleware('permission:view audit logs');
 });
 
 
