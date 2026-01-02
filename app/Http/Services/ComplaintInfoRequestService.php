@@ -48,7 +48,10 @@ class ComplaintInfoRequestService
             $pushNotificationController->sendPushNotification(
                 $title,
                 $body,
-                $token
+                $token,
+                [
+                    'complaint_id'=> (string)$complaint->id,
+                ]
             );
         }
 

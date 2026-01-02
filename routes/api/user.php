@@ -20,20 +20,27 @@ Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
 
 
 
-Route::middleware(['auth:user-api','role:user'])->group(function () {
-    Route::post('logout', [AuthController::class,'userLogout'])->middleware('permission:user-logout');
+Route::middleware(['auth:user-api'])->group(function () {
+    Route::post('logout', [AuthController::class,'userLogout']);
+    //->middleware('permission:user-logout');
 
-    Route::get('government-agencies', [ComplaintController::class, 'listAgencies'])->middleware('permission:complaint.list-agencies');
+    Route::get('government-agencies', [ComplaintController::class, 'listAgencies']);
+   // ->middleware('permission:complaint.list-agencies');
 
-    Route::post('submit/complaints', [ComplaintController::class, 'submitComplaint'])->middleware('permission:complaint.submit');
-    Route::post('/info-request/{infoRequest}/respond', [ComplaintInfoRequestController::class, 'respond'])->middleware('permission:info_request.respond');
+    Route::post('submit/complaints', [ComplaintController::class, 'submitComplaint']);
+    //->middleware('permission:complaint.submit');
+    Route::post('/info-request/{infoRequest}/respond', [ComplaintInfoRequestController::class, 'respond']);
+    //->middleware('permission:info_request.respond');
 
-    Route::post('complaintsByStatus', [ComplaintController::class, 'complaintsByStatus'])->middleware('permission:complaint.show-by-status');
+    Route::post('complaintsByStatus', [ComplaintController::class, 'complaintsByStatus']);
+    //->middleware('permission:complaint.show-by-status');
 
     //create_device_token
-    Route::post('create_device_token', [PushNotificationController::class, 'create_device_token'])->middleware('permission:device_token.create');
+    Route::post('create_device_token', [PushNotificationController::class, 'create_device_token']);
+    //->middleware('permission:device_token.create');
 
-    Route::post('complaints/{complaint}/update', [ComplaintController::class, 'updateByUser'])->middleware('permission:complaint.update_own');
+    Route::post('complaints/{complaint}/update', [ComplaintController::class, 'updateByUser']);
+    //->middleware('permission:complaint.update_own');
 
 
 

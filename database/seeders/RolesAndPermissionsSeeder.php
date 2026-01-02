@@ -17,7 +17,7 @@ class RolesAndPermissionsSeeder extends Seeder
         | USER (user-api)
         |--------------------------------------------------------------------------
         */
-        $userRole = Role::firstOrCreate([
+   /*     $userRole = Role::firstOrCreate([
             'name' => 'user',
             'guard_name' => 'user-api'
         ]);
@@ -40,6 +40,9 @@ class RolesAndPermissionsSeeder extends Seeder
         }
 
         $userRole->syncPermissions($userPermissions);
+
+
+   */
 
         /*
         |--------------------------------------------------------------------------

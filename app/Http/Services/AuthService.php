@@ -197,7 +197,7 @@ class AuthService
         ]);
 
 
-        $user->assignRole('user');
+       // $user->assignRole('user');
 
 
         $token = $user->createToken('user-token')->accessToken;

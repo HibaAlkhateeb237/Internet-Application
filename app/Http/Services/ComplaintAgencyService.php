@@ -98,7 +98,18 @@ class ComplaintAgencyService
             $title = 'تحديث حالة الشكوى';
             $body = "تم تغيير حالة الشكوى رقم {$complaint->reference_number} إلى: {$status}";
 
-            $push->sendPushNotification($title, $body, $token);
+            $push->sendPushNotification(
+                $title,
+                $body,
+                $token,
+                [
+                   // 'complaint_id'     => (string) $complaint->id,
+                    'complaint_status' =>  $status,
+                   // 'type'             => 'complaint_status_updated'
+                ]
+
+
+            );
         }
 
 

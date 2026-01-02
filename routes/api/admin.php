@@ -18,6 +18,7 @@ use App\Http\Controllers\AgencyComplaintController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
+use App\Http\Controllers\PushNotificationController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -72,6 +73,10 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
 
 
 
+    //========================================================================
+
+
+    Route::post('/notifications/send-to-user', [PushNotificationController::class, 'sendNotificationToUser']);
 
 
 
@@ -81,7 +86,6 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
 Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv']);
 
 
-// ->middleware('permission:info_request.create');
 
 
 //---------------------------------------employee-------------------------------------
