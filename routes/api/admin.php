@@ -69,21 +69,20 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
 
     Route::get('/dashboard/stats', [AdminDashboardController::class, 'stats'])->middleware('permission:system dashboard');
 
-    Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv']);
+    Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv'])->middleware('permission:system dashboard');
 
+    Route::get('/reports/complaints/pdf', [AdminReportController::class, 'exportPdf'])->middleware('permission:system dashboard');
 
 
     //========================================================================
 
-
     Route::post('/notifications/send-to-user', [PushNotificationController::class, 'sendNotificationToUser']);
-
 
 
 });
 
 
-Route::get('/reports/complaints/csv', [AdminReportController::class, 'exportCsv']);
+
 
 
 

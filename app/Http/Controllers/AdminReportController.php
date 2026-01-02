@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Complaint;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Mpdf\Mpdf;
 
 class AdminReportController extends Controller
 {
@@ -42,7 +44,9 @@ class AdminReportController extends Controller
                             $c->user?->name ?? '-',
                             $c->agency?->name ?? '-',
                             $c->status,
-                            $c->created_at?->format('Y-m-d H:i'),
+                           // $c->created_at?->format('Y-m-d H:i'),
+                            "'" . $c->created_at?->format('Y-m-d H:i'),
+
                         ]);
                     }
                 });
@@ -53,7 +57,42 @@ class AdminReportController extends Controller
         return response()->stream($callback, 200, $headers);
     }
 
+    //=========================================================================================
 
+
+/*
+
+    public function exportPdf()
+    {
+
+        $complaints = Complaint::with(['user', 'agency'])->get();
+
+        $pdf = Pdf::loadView('reports.complaints', compact('complaints'));
+        return $pdf->download('complaints_report.pdf');
+
+    }*/
+
+
+    public function exportPdf()
+    {
+        $complaints = Complaint::with(['user', 'agency'])->get();
+
+        // إعدادات mPDF للغة العربية
+        $mpdf = new Mpdf([
+            'mode' => 'utf-8',
+            'format' => 'A4',
+            'default_font' => 'dejavusans',
+            'autoScriptToLang' => true,
+            'autoLangToFont' => true,
+            'setAutoBottomMargin' => 'stretch',
+        ]);
+
+        // تمرير البيانات إلى Blade وتحويلها إلى HTML
+        $html = view('reports.complaints', compact('complaints'))->render();
+
+        $mpdf->WriteHTML($html);
+        return $mpdf->Output('complaints_report.pdf', 'D'); // 'D' = تحميل
+    }
 
 
 
