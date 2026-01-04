@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Responses\ApiResponse;
 use Exception;
 use Illuminate\Http\Request;
 use Kreait\Firebase\Factory;
@@ -54,30 +55,33 @@ class PushNotificationController extends Controller
 
     //****************************************************************************
 
-
     public function create_device_token(Request $request)
     {
-
         $request->validate([
             'device_token' => 'required|string',
         ]);
-
 
         $user = auth()->user();
 
         if ($user) {
 
             $user->device_token = $request->device_token;
-
             $user->save();
 
-            return response()->json(['success' => true, 'message' => 'Device token added successfully.']);
+            return ApiResponse::success(
+                 'Device token added successfully.',
+                ['device_token' => $user->device_token],
+                 200
+            );
+
         } else {
-            return response()->json(['success' => false, 'message' => 'User not authenticated.'], 401);
+            return ApiResponse::error(
+                 'User not authenticated.',
+                 [],
+                401
+            );
         }
     }
-
-
 //****************************************************************************************************************
 
 

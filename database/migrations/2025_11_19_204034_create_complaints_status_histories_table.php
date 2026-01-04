@@ -15,9 +15,15 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('complaint_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('admin_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('admin_id')->nullable()->constrained()->cascadeOnDelete();
             $table->enum('status',['new','in_progress','resolved','rejected'])->default('new');
             $table->text('note')->nullable();
+            $table->string('action_type');
+
+            $table->text('old_value')->nullable();
+            $table->text('new_value')->nullable();
+
+
 
             $table->timestamps();
         });

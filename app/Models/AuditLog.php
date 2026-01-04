@@ -3,13 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AuditLog extends Model
-
 {
+    use HasFactory;
+
     protected $fillable = [
-        'actor_type',
-        'actor_id',
         'action',
         'entity',
         'entity_id',
@@ -19,10 +19,20 @@ class AuditLog extends Model
         'status_code',
         'success',
         'payload',
+        'actor_type',
+        'actor_id',
     ];
 
+    /**
+
+     *
+     */
     protected $casts = [
         'payload' => 'array',
-
+        'success' => 'boolean',
     ];
+    public function actor()
+    {
+        return $this->morphTo();
+    }
 }

@@ -20,5 +20,7 @@ class AdminSeeder extends Seeder
 
         ]);
        // $admin->assignRole('super-admin');
+        $admin->assignRole('super_admin');
+
     }
 }

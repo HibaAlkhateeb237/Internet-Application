@@ -62,6 +62,8 @@ class ComplaintAgencyService
         return ['success' => true];
     }
 
+    //-----------------------------------------------------------------------------
+
     public function updateStatus($id, $status, $note)
     {
         $admin = Auth::guard('admin')->user();
@@ -74,6 +76,8 @@ class ComplaintAgencyService
 //            return response()->json(['error' => 'لا تملك صلاحية تعديل الشكوى'], 403);
 //        }
 
+        $oldStatus = $complaint->status;
+
         $this->repo->update($complaint, ['status' => $status]);
 
         ComplaintStatusHistory::create([
@@ -81,10 +85,32 @@ class ComplaintAgencyService
             'admin_id' => $admin->id,
             'status' => $status,
             'note' => $note,
+            'action_type' => 'status_update',
+            'old_value' => $oldStatus,
+            'new_value' => $status,
+
         ]);
+
+
+        $user = $complaint->user;
+        $token = $user->device_token;
+
+        if ($token) {
+            $push = new \App\Http\Controllers\PushNotificationController();
+
+            $title = 'تحديث حالة الشكوى';
+            $body = "تم تغيير حالة الشكوى رقم {$complaint->reference_number} إلى: {$status}";
+
+            $push->sendPushNotification($title, $body, $token);
+        }
+
+
+
 
         return ['success' => true];
     }
+
+    //---------------------------------------------------------------------------------
 
     public function addNote($id, $note)
     {
@@ -100,7 +126,13 @@ class ComplaintAgencyService
             'admin_id' => $admin->id,
             'status' => $complaint->status,
             'note' => $note,
+            'action_type' => 'note_add',
+            'old_value'    => null,
+            'new_value'    => $note,
+
         ]);
+
+
 
         return ['success' => true];
     }

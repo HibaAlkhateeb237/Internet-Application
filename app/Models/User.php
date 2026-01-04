@@ -7,18 +7,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
+    use HasRoles;
+
+    protected $guard_name = 'user-api';
+
+
     use HasFactory, Notifiable, HasApiTokens;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+
     protected $fillable = [
         'name',
         'email',
@@ -28,6 +29,7 @@ class User extends Authenticatable
         'is_verified',
         'failed_login_attempts',
         'locked_until',
+        'device_token',
 
     ];
 
