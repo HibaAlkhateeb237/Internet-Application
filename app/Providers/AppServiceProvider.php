@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\UserDAOInterface;
 use App\Repositories\UserRepository;
@@ -16,8 +19,13 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(AdminDAOInterface::class, AdminRepository::class);
     }
 
-    public function boot()
+    public function boot(): void
     {
-        //
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(3)->by(
+                optional($request->user())->id ?: $request->ip()
+            );
+        });
     }
+
 }

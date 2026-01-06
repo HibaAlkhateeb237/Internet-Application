@@ -43,88 +43,16 @@ class AuthService
     public function login(string $email, string $password)
     {
         $errors = [];
-        $maxAttempts = 5;
-        $lockMinutes = 3;
         $user = $this->users->findByEmail($email);
 
+        if (!$user) $errors['email'] = 'Email not found';
+        if ($user && !Hash::check($password, $user->password)) $errors['password'] = 'Incorrect password';
+        if ($user && !$user->is_verified) $errors['email'] = 'Email not verified';
 
-        if (!$user) {
-            return ApiResponse::error(
-                 'Email not found',
-                   null,
-                   404
-            );
-        }
-
-
-        if ($user->locked_until && now()->lessThan($user->locked_until)) {
-            $remaining = now()->diffInMinutes($user->locked_until);
-            $remaining =ceil($remaining);
-
-            return ApiResponse::error(
-                 "Account locked for {$remaining} minutes",
-                 null,
-                 429
-            );
-        }
-
-
-        if (!Hash::check($password, $user->password)) {
-
-
-            $user->failed_login_attempts += 1;
-
-
-            if ($user->failed_login_attempts > $maxAttempts) {
-                $user->locked_until = now()->addMinutes($lockMinutes);
-                $user->save();
-
-
-                Mail::raw(
-                    " Your account has been locked for $lockMinutes  minutes due to multiple failed login attempts.",
-                    function ($message) use ($user) {
-                        $message->to($user->email)->subject('Account Locked');
-                    }
-                );
-
-                return ApiResponse::error(
-                   "Account locked for $lockMinutes minutes",
-                     null,
-                    429
-                );
-            }
-
-            $user->save();
-
-            return ApiResponse::error(
-                 'Incorrect password',
-                 null,
-                 401
-            );
-        }
-
-        $user->failed_login_attempts = 0;
-        $user->locked_until = null;
-        $user->save();
-
-
-        if (!$user->is_verified) {
-            return ApiResponse::error(
-                 'Email not verified',
-                null,
-                 403
-            );
-        }
+        if (!empty($errors)) return ['errors' => $errors];
 
         $token = $user->createToken('user-token')->accessToken;
-        return ApiResponse::success(
-             'Login successful',
-              [
-            'user'  => $user,
-            'token' => $token
-        ],
-            200
-        );
+        return compact('user', 'token');
     }
 
     //------------------------------------------------------------------------------
@@ -199,7 +127,7 @@ class AuthService
         ]);
 
 
-        $user->assignRole('user');
+       // $user->assignRole('user');
 
 
         $token = $user->createToken('user-token')->accessToken;

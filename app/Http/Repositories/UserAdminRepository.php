@@ -5,7 +5,8 @@ namespace App\Http\Repositories;
 use App\Models\Admin;
 use App\Models\User;
 
-class UserAdminRepository
+class
+UserAdminRepository
 {
 
     public function __construct()

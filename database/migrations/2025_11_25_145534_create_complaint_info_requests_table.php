@@ -17,9 +17,9 @@ return new class extends Migration
             $table->foreignId('complaint_id')->constrained()->cascadeOnDelete();
             $table->foreignId('admin_id')->constrained('admins')->cascadeOnDelete();
 
-            $table->text('request_text');   // نص المعلومات المطلوبة
-            $table->text('citizen_response')->nullable(); // رد المواطن
-            $table->string('attachment')->nullable(); // ملف يرفعه المواطن (اختياري)
+            $table->text('request_text');
+            $table->text('citizen_response')->nullable();
+            $table->string('attachment')->nullable();
 
             $table->boolean('is_answered')->default(false);
 
