@@ -25,9 +25,15 @@ class AdminService
             'password' => bcrypt($data['password']),
 
         ]);
+
+        //$admin->assignRole('employee');
+
+
+
         //$admin->assignRole('agency-employee');
 
         $admin->assignRole('employee');
+
 
         $token = $admin->createToken('MyApp', ['admin'])->accessToken;
         return compact('admin', 'token');

@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplaintInfoRequestService
 {
-    protected $repository;
+    protected  $repository;
 
     public function __construct(ComplaintInfoRequestRepository $repository)
     {
@@ -23,13 +23,16 @@ class ComplaintInfoRequestService
     {
 
 
-
         if ($complaint->locked_by_admin_id !== auth('admin')->id()) {
             throw new \Exception('لا يمكنك إرسال طلب معلومات لأن الشكوى مقفلة من موظف آخر.');
         }
 
+        $infoRequest = $this->repository->createRequest($complaint, $data);
+
+
 
         $infoRequest = $this->repository->createRequest($complaint, $data);
+
 
 
         $complaint->update(['status' => 'in_progress']);

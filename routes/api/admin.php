@@ -15,6 +15,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminReportController;
 use App\Http\Controllers\AgencyComplaintController;
+use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
@@ -27,16 +28,18 @@ use Illuminate\Support\Facades\Route;
 //Route::post('register',[AuthController::class,'adminRegister'])->middleware('check_admin');;
 
 
-Route::post('Login',[AuthController::class,'adminLogin']) ->middleware('login.throttle');;
+Route::post('Login',[AuthController::class,'adminLogin']) ->middleware('login.throttle','trace');;
 
 
 //  ------------------------------super_admin---------------------------------
 
-Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
+Route::middleware(['auth:admin-api', 'role:super_admin','trace','throttle:api'])->group(function () {
 
     Route::post('logout', [AuthController::class, 'adminLogout'])->middleware('permission:admin.logout');
     Route::post('register', [AuthController::class, 'adminRegister'])->middleware('permission:admin.register');
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies'])->middleware('permission:list-agencies');
+    Route::get('/audit-logs', [AuditLogController::class, 'index'])
+        ->middleware('permission:view audit logs');
 
     Route::get('complaints', [ComplaintController::class, 'index']);
     Route::post('complaints/by-status', [ComplaintController::class, 'getByStatus'])->middleware('permission:complaints get by status');
@@ -93,7 +96,7 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
 
 //---------------------------------------employee-------------------------------------
 
-Route::middleware(['auth:admin-api', 'role:employee|super_admin'])->group(function () {
+Route::middleware(['auth:admin-api', 'role:employee|super_admin','trace','throttle:api'])->group(function () {
 
     Route::post('logout', [AuthController::class, 'adminLogout'])->middleware('permission:employee.logout');
 

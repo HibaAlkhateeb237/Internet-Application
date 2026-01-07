@@ -21,5 +21,7 @@ class PermissionsSeeder extends Seeder
         Permission::create(['name' => 'export_reports']);
         Permission::create(['name' => 'manage_employees']);
         Permission::create(['name' => 'manage_users']);
+       // view audit logs
+        Permission::create(['name' => 'view audit logs']);
     }
 }

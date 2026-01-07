@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\ComplaintInfoRequestController;
@@ -6,26 +7,22 @@ use App\Http\Controllers\PushNotificationController;
 use Illuminate\Support\Facades\Route;
 
 
-
-Route::post('register',[AuthController::class, 'userRegister']);
-
-
-Route::post('Login',[AuthController::class, 'userLogin'])->middleware('login.throttle');
+Route::post('register', [AuthController::class, 'userRegister'])->middleware('throttle:api');;
 
 
-Route::post('sendOtp',[AuthController::class, 'sendOtp']);
+Route::post('Login', [AuthController::class, 'userLogin'])->middleware('login.throttle');
+
+
+Route::post('sendOtp', [AuthController::class, 'sendOtp'])->middleware('throttle:api');
 // confirm by email
-Route::post('verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('verify-otp', [AuthController::class, 'verifyOtp'])->middleware('throttle:api');;
 
-
-
-
-Route::middleware(['auth:user-api'])->group(function () {
-    Route::post('logout', [AuthController::class,'userLogout']);
+Route::middleware(['auth:user-api', 'trace', 'throttle:api'])->group(function () {
+    Route::post('logout', [AuthController::class, 'userLogout']);
     //->middleware('permission:user-logout');
 
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies']);
-   // ->middleware('permission:complaint.list-agencies');
+    // ->middleware('permission:complaint.list-agencies');
 
     Route::post('submit/complaints', [ComplaintController::class, 'submitComplaint']);
     //->middleware('permission:complaint.submit');
@@ -43,8 +40,6 @@ Route::middleware(['auth:user-api'])->group(function () {
     //->middleware('permission:complaint.update_own');
 
 
-
-
-
-
 });
+
+

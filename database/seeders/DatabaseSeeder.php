@@ -30,8 +30,14 @@ class DatabaseSeeder extends Seeder
             ComplaintSeeder::class,
             AdminSeeder::class,
             EmployeeSeeder::class,
+
+         //  PermissionsSeeder::class,
+          //  RolesSeeder::class
+            AuditLogSeeder::class
+
         //    PermissionsSeeder::class,
         //    RolesSeeder::class
+
 
 
         ]);

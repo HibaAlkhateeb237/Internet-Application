@@ -3,6 +3,7 @@
 namespace App\Http\Repositories;
 
 use App\Models\GovernmentAgency;
+use Illuminate\Support\Facades\Cache;
 
 class GovernmentAgencyRepository
 {
@@ -17,6 +18,8 @@ class GovernmentAgencyRepository
 
     public function getAll()
     {
-        return GovernmentAgency::all();
+        return Cache::remember('agencies_list', 60 * 60, function () {
+            return GovernmentAgency::all();
+        });
     }
 }

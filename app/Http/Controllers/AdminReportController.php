@@ -96,6 +96,4 @@ class AdminReportController extends Controller
 
 
 
-
-
 }

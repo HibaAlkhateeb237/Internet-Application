@@ -4,7 +4,6 @@ namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
-use Throwable;
 
 class Handler extends ExceptionHandler
 {
@@ -40,10 +39,11 @@ class Handler extends ExceptionHandler
         return response()->json([
             'success' => false,
             'message' => 'You must login first',
-            'data'    => null,
-            'errors'  => [
+            'data' => null,
+            'errors' => [
                 'auth' => 'Unauthenticated'
             ]
         ], 401);
     }
+
 }
