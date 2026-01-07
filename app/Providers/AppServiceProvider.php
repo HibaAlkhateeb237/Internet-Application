@@ -8,6 +8,8 @@ use App\Repositories\UserRepository;
 use App\Repositories\AdminDAOInterface;
 use App\Repositories\AdminRepository;
 
+
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register()
@@ -18,6 +20,6 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        //
+
     }
 }

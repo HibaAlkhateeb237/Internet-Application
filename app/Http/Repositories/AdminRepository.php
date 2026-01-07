@@ -27,7 +27,7 @@ class AdminRepository
 
     public function getAllEmployees()
     {
-        return Admin::query()
+        return Admin::with('roles')
             ->where('id', '!=', 1)
             ->paginate(10);
     }

@@ -30,9 +30,22 @@ return [
 
     'disks' => [
 
+        'google' => [
+            'driver' => 'google',
+            'clientId' => null,
+            'clientSecret' => null,
+            'refreshToken' => null,
+
+            'serviceAccount' => storage_path('app/google-service-account.json'),
+
+            'folderId' => env('GOOGLE_DRIVE_FOLDER_ID'),
+        ],
+
+
+
         'local' => [
             'driver' => 'local',
-            'root' => storage_path('app/private'),
+            'root' => storage_path('app\backup-temp'),
             'serve' => true,
             'throw' => false,
             'report' => false,

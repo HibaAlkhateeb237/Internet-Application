@@ -38,6 +38,10 @@ Route::middleware(['auth:admin-api', 'role:super_admin'])->group(function () {
     Route::post('register', [AuthController::class, 'adminRegister'])->middleware('permission:admin.register');
     Route::get('government-agencies', [ComplaintController::class, 'listAgencies'])->middleware('permission:list-agencies');
 
+    Route::get('complaints', [ComplaintController::class, 'index']);
+    Route::post('complaints/by-status', [ComplaintController::class, 'getByStatus'])->middleware('permission:complaints get by status');
+
+
     // ================= Roles & Permissions =================
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:manage roles');
