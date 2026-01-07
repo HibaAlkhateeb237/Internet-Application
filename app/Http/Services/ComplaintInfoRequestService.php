@@ -53,7 +53,8 @@ class ComplaintInfoRequestService
                 $body,
                 $token,
                 [
-                    'complaint_id'=> (string)$complaint->id,
+                    'complaint_id'=>(string)$complaint->id,
+                     'reference_number'=>(string)$complaint->reference_number
                 ]
             );
         }

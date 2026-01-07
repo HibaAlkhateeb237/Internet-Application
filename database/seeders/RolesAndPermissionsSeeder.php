@@ -95,9 +95,11 @@ class RolesAndPermissionsSeeder extends Seeder
                  'system dashboard',
                 'manage Employees',
 
-                'complaints get by status',
+                'filter complaints  by status',
 
-                'view audit logs'
+                'view audit logs',
+                'show complaints',
+
 
 
             ]
