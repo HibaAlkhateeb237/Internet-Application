@@ -102,7 +102,39 @@ class ComplaintController extends Controller
 
 
 
+    public function index()
+    {
+        $complaints = Complaint::with([
+            'user:id,name',
+            'agency:id,name'
+        ])->orderBy('created_at', 'desc')->get();
 
+        return ApiResponse::success(
+            'Complaints retrieved successfully',
+            $complaints
+        );
+    }
+
+//===============================================================
+
+
+
+    public function getByStatus(ComplaintStatusRequest $request)
+    {
+        $status = $request->status;
+
+        $complaints = Complaint::with([
+            'user:id,name',
+            'agency:id,name'
+        ])
+            ->where('status', $status)
+            ->get();
+
+        return ApiResponse::success(
+            'Complaints filtered by status',
+            $complaints
+        );
+    }
 
 
 

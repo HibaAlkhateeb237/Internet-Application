@@ -41,6 +41,10 @@ Route::middleware(['auth:admin-api', 'role:super_admin','trace','throttle:api'])
     Route::get('/audit-logs', [AuditLogController::class, 'index'])
         ->middleware('permission:view audit logs');
 
+    Route::get('complaints', [ComplaintController::class, 'index'])->middleware('permission:show complaints');
+    Route::post('complaints/by-status', [ComplaintController::class, 'getByStatus'])->middleware('permission: filter complaints  by status');
+
+
     // ================= Roles & Permissions =================
 
     Route::get('/roles', [RoleController::class, 'index'])->middleware('permission:manage roles');

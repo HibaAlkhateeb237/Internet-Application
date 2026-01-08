@@ -11,6 +11,8 @@ use App\Repositories\UserRepository;
 use App\Repositories\AdminDAOInterface;
 use App\Repositories\AdminRepository;
 
+
+
 class AppServiceProvider extends ServiceProvider
 {
     public function register()
@@ -21,11 +23,13 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(10)->by(
                 optional($request->user())->id ?: $request->ip()
             );
         });
+
     }
 
 }
