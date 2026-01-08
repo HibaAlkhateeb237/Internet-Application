@@ -10,13 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class ComplaintInfoRequestService
 {
-    protected  $repository;
+    protected $repository;
 
     public function __construct(ComplaintInfoRequestRepository $repository)
     {
         $this->repository = $repository;
     }
-
 
 
     public function sendRequest(Complaint $complaint, array $data)
@@ -30,9 +29,7 @@ class ComplaintInfoRequestService
         $infoRequest = $this->repository->createRequest($complaint, $data);
 
 
-
         $infoRequest = $this->repository->createRequest($complaint, $data);
-
 
 
         $complaint->update(['status' => 'in_progress']);
@@ -45,7 +42,7 @@ class ComplaintInfoRequestService
             $pushNotificationController = new \App\Http\Controllers\PushNotificationController();
 
             $title = 'طلب معلومات إضافية';
-            $body  = 'تم طلب معلومات إضافية بخصوص الشكوى رقم '
+            $body = 'تم طلب معلومات إضافية بخصوص الشكوى رقم '
                 . $complaint->reference_number;
 
             $pushNotificationController->sendPushNotification(
@@ -53,8 +50,8 @@ class ComplaintInfoRequestService
                 $body,
                 $token,
                 [
-                    'complaint_id'=>(string)$complaint->id,
-                     'reference_number'=>(string)$complaint->reference_number
+                    'complaint_id' => (string)$complaint->id,
+                    'reference_number' => (string)$complaint->reference_number
                 ]
             );
         }
@@ -63,12 +60,11 @@ class ComplaintInfoRequestService
     }
 
 
-
-    public function respond(complaint_info_request $infoRequest, array $data)
+    public function respond(Complaint $complaint, array $data)
     {
-        $response = $this->repository->respond($infoRequest, $data);
+        $response = $this->repository->respond($complaint, $data);
 
-        $infoRequest->complaint->update(['status' => 'in_progress']);
+        $complaint->update(['status' => 'in_progress']);
 
         return $response;
     }

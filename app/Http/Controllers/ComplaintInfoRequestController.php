@@ -45,7 +45,7 @@ class ComplaintInfoRequestController extends Controller
 
 
 
-    public function respond(ComplaintInfoRequestRespondRequest $request, complaint_info_request $infoRequest)
+    public function respond(ComplaintInfoRequestRespondRequest $request, Complaint $complaint)
     {
         $data = $request->validated();
 
@@ -53,7 +53,7 @@ class ComplaintInfoRequestController extends Controller
             $data['attachment'] = $request->file('attachment')->store('complaint_responses', 'public');
         }
 
-        $response = $this->service->respond($infoRequest, $data);
+        $response = $this->service->respond($complaint, $data);
 
         return ApiResponse::success(
             'تم إرسال رد المواطن بنجاح.',

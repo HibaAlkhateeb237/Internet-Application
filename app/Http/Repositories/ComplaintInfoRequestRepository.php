@@ -16,8 +16,11 @@ class ComplaintInfoRequestRepository
         ]);
     }
 
-    public function respond(complaint_info_request $infoRequest, array $data)
+    public function respond(Complaint $complaint, array $data)
     {
+
+        $infoRequest = $complaint->infoRequests()->first();
+
         $infoRequest->update([
             'citizen_response' => $data['citizen_response'],
             'attachment'       => $data['attachment'] ?? null,

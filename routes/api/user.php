@@ -26,7 +26,7 @@ Route::middleware(['auth:user-api', 'trace', 'throttle:api'])->group(function ()
 
     Route::post('submit/complaints', [ComplaintController::class, 'submitComplaint']);
     //->middleware('permission:complaint.submit');
-    Route::post('/info-request/{infoRequest}/respond', [ComplaintInfoRequestController::class, 'respond']);
+    Route::post('/info-request/{complaint}/respond', [ComplaintInfoRequestController::class, 'respond']);
     //->middleware('permission:info_request.respond');
 
     Route::post('complaintsByStatus', [ComplaintController::class, 'complaintsByStatus']);
