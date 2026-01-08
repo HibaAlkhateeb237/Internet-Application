@@ -40,20 +40,45 @@ class AuthService
 
     //-----------------------------------------------------------------------------
 
+
+
     public function login(string $email, string $password)
     {
         $errors = [];
         $user = $this->users->findByEmail($email);
 
-        if (!$user) $errors['email'] = 'Email not found';
-        if ($user && !Hash::check($password, $user->password)) $errors['password'] = 'Incorrect password';
-        if ($user && !$user->is_verified) $errors['email'] = 'Email not verified';
+        if (!$user) {
+            $errors['email'] = 'Email not found';
+        }
 
-        if (!empty($errors)) return ['errors' => $errors];
+        if ($user && !Hash::check($password, $user->password)) {
+            $errors['password'] = 'Incorrect password';
+        }
+
+        if ($user && !$user->is_verified) {
+            $errors['email'] = 'Email not verified';
+        }
+
+        if (!empty($errors)) {
+            return ApiResponse::error(
+                message: 'Login failed',
+                errors: $errors,
+                status: 422
+            );
+        }
 
         $token = $user->createToken('user-token')->accessToken;
-        return compact('user', 'token');
+
+        return ApiResponse::success(
+            message: 'Login successful',
+            data: [
+            'user'  => $user,
+            'token' => $token,
+        ],
+            status: 200
+        );
     }
+
 
     //------------------------------------------------------------------------------
 
